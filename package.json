@@ -1,0 +1,17 @@
+{
+  "name": "cotask",
+  "module": "index.ts",
+  "type": "module",
+  "devDependencies": {
+    "@types/bun": "latest",
+    "@types/fs-extra": "^11.0.4",
+    "@types/node": "^20.14.2"
+  },
+  "peerDependencies": {
+    "typescript": "^5.0.0"
+  },
+  "dependencies": {
+    "fs-extra": "^11.2.0",
+    "openai": "^4.49.1"
+  }
+}
