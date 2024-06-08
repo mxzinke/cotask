@@ -1,6 +1,6 @@
 import { join } from "node:path";
 import { Tool } from ".";
-import { exists, unlink } from "node:fs/promises";
+import { exists } from "node:fs/promises";
 import { move } from "fs-extra";
 
 interface MoveFileParams {
