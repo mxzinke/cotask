@@ -79,24 +79,41 @@ const getDirectoryStructure = async (
   if (!existsSync(dir)) return `Directory does not exist: ${dir}`;
   const files = await readdir(dir);
 
-  if (files.length === 0) return "This directory is empty.";
+  if (files.length === 0)
+    return depth === 1 ? "This directory is empty." : `${indent}\n`;
 
   let structure = "";
+  let idx = 0;
   for (const file of files) {
-    if (ignoreDirectories.includes(file)) continue;
+    if (ignoreDirectories.includes(file)) {
+      idx++;
+      continue;
+    }
 
     const filePath = join(dir, file);
     const fileStat = await stat(filePath);
     if (fileStat.isDirectory()) {
-      structure += `${indent}${file}/\n`;
+      if (idx !== files.length - 1) structure += `│   ${indent}\n`;
+      structure +=
+        idx === files.length - 1
+          ? `${indent}└── ${file}/\n`
+          : `${indent}├── ${file}/\n`;
       structure += await getDirectoryStructure(
         filePath,
         depth - 1,
-        indent + "  | ",
+        indent + "│   ",
       );
     } else {
-      structure += `${indent}${file}\n`;
+      structure +=
+        idx === files.length - 1
+          ? `${indent}└── ${file}\n`
+          : `${indent}├── ${file}\n`;
     }
+
+    if (idx === files.length - 1 && indent !== "") structure += `${indent}\n`;
+
+    idx++;
   }
-  return structure;
+
+  return indent === "" ? `│\n${structure}` : structure;
 };

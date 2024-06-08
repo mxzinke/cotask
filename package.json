@@ -2,15 +2,22 @@
   "name": "cotask",
   "module": "index.ts",
   "type": "module",
+  "scripts": {
+    "dev": "bun --compile --watch ./index.ts",
+    "cli": "bun index.ts",
+    "build": "bun build ./index.ts --compile --outfile cotask-cli"
+  },
   "devDependencies": {
-    "@types/bun": "latest",
+    "@types/bun": "^1.1.3",
     "@types/fs-extra": "^11.0.4",
-    "@types/node": "^20.14.2"
+    "@types/node": "^20.14.2",
+    "typescript": "^5.4.5"
   },
   "peerDependencies": {
     "typescript": "^5.0.0"
   },
   "dependencies": {
+    "dotenv": "^16.4.5",
     "fs-extra": "^11.2.0",
     "openai": "^4.49.1"
   }
