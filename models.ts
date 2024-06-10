@@ -1,14 +1,31 @@
 import OpenAI from "openai";
 import { AIModel } from "./lib/models";
 
-const openaiProvider = new OpenAI({
-  apiKey: process.env.COTASK_OPENAI_API_KEY!,
-});
+export interface AIModels {
+  quality: AIModel;
+  fast: AIModel;
+  online: AIModel;
+}
 
-export const FastModel = new AIModel(openaiProvider, "gpt-3.5-turbo", {
-  maxTokensContext: 16 * 1024,
-});
+export async function getModels(): Promise<AIModels> {
+  // TODO: add handling for CoTask Cloud
+  const provider = new OpenAI({
+    apiKey: process.env.OPENAI_API_KEY!,
+  });
+  const perplexity = new OpenAI({
+    apiKey: process.env.PERPLEXITY_API_KEY!,
+    baseURL: "https://api.perplexity.ai",
+  });
 
-export const AccurateModel = new AIModel(openaiProvider, "gpt-4o", {
-  maxTokensContext: 128_000,
-});
+  return {
+    quality: new AIModel(provider, "gpt-4o", {
+      maxTokensContext: 128_000,
+    }),
+    fast: new AIModel(provider, "gpt-3.5-turbo", {
+      maxTokensContext: 16 * 1024,
+    }),
+    online: new AIModel(perplexity, "llama-3-sonar-large-32k-online", {
+      maxTokensContext: 28 * 1024,
+    }),
+  };
+}
