@@ -10,6 +10,8 @@ Your new co-worker is able to:
 - **Make Changes** - Other than ChatGPT or else can CoTaks apply the right patches with high code quality
 - **Suggests commands** - Missing dependencies? Running tests? CoTask has you covered and suggests you commands.
 
+> **Notice:** This project is under active development and not ready yet. Still you can clone and run it.
+
 ## Install
 
 CoTask is currently only available for MacOS (both Intel and M-series) and Linux (x86 and ARM64). Install it with:
@@ -20,7 +22,7 @@ curl -o https://github.com/mxzinke/cotask ... # TODO: Set this up on first relea
 
 ## Usage
 
-Please signup at the [CoTask Cloud](https://cotask/signup) to get an `Access Key` for CoTask. When signing up, you get 500 credits to start trying it. If you want to use the open source version, read the section 'Open Source Version (Free)' below.
+Please signup at the [CoTask Cloud](https://cotask.dev/signup) to get an `Access Key` for CoTask. When signing up, you get 500 credits to start trying it. If you want to use the open source version, read the section 'Open Source Version (Free)' below.
 
 Execute the following command to login into CoTask Cloud:
 
