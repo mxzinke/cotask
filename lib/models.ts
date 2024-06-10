@@ -31,11 +31,11 @@ export class AIModel {
       0,
     );
 
-    console.log(
-      `[AI] Requesting response from model "${this.model}" with about ${
-        baseContextLength + threadContextLength
-      } tokens at context.`,
-    );
+    // console.log(
+    //   `[DEBUG] Requesting response from model "${this.model}" with about ${
+    //     baseContextLength + threadContextLength
+    //   } tokens at context.`,
+    // );
 
     // If the context is too long, we need to trim it down (this means the model does for get it!)
     if (
@@ -82,6 +82,15 @@ export class AIModel {
         ...next,
       };
     }
+
+    // console.log(
+    //   `[DEBUG] Recieved response from model "${this.model}". Used tokens: ${
+    //     res.usage?.total_tokens ??
+    //     baseContextLength +
+    //       threadContextLength +
+    //       JSON.stringify(res.choices[0].message).length / 3
+    //   }`,
+    // );
 
     return {
       ...res.choices[0].message,

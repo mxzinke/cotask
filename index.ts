@@ -28,7 +28,7 @@ program
     ),
   )
   .action(async (taskDefinition: string) => {
-    console.log("Running task with definition: ", taskDefinition);
+    console.log("Running task with definition:", taskDefinition);
 
     const models = await getModels();
     const agents = await getAgents(models);

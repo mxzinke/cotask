@@ -32,7 +32,6 @@ export default class CreatePlan extends Tool<CreatePlanParams> {
                 phase: {
                   type: "string",
                   examples: [
-                    "plan",
                     "research",
                     "design",
                     "code",
@@ -41,7 +40,7 @@ export default class CreatePlan extends Tool<CreatePlanParams> {
                     "document",
                   ],
                   description:
-                    "The phase of software development in which the task belongs to. 'plan' can create subtasks, 'research' can find information, 'design' is for creating a software architecture, 'code' to make changes to the codebase, 'review' will review the code changes against coding standards, 'test' will check that it didn't break anything and fulfills the requirements and 'document' will document the code changes.",
+                    "The phase of software development in which the task belongs to. 'research' can find information, 'design' is for creating a software architecture, 'code' to make changes to the codebase, 'review' will review the code changes against coding standards, 'test' will check that it didn't break anything and fulfills the requirements and 'document' will document the code changes.",
                 },
                 task: {
                   type: "string",
@@ -73,7 +72,9 @@ export default class CreatePlan extends Tool<CreatePlanParams> {
 
   protected async execute(params: CreatePlanParams): Promise<string> {
     for (const task of params.taskSequence) {
-      console.log(`📋 [${task.phase.toUpperCase()}]: Starting...`);
+      console.log(
+        `📋 [${task.phase.toUpperCase()}]: Starting for '${task.task}'`,
+      );
       await this.exectuteTaskCallback(task)
         .then(() => {
           console.log(`✅ [${task.phase.toUpperCase()}]: ${task.task}`);

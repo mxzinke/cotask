@@ -20,7 +20,7 @@ export default class ExecuteCommand extends Tool<ExecuteCommandParams> {
           command: {
             type: "string",
             description:
-              "The command to execute (e.g. bash command). Make sure to use non-interactive commands and all required parameters. Changing the current working directory is not supported.",
+              "The command to execute (e.g. bash command). Changing the current working directory is not supported.",
             examples: ["npm install", "ls -la ./docs", "rm -rf ./node_modules"],
           },
           timeout: {
@@ -45,31 +45,31 @@ export default class ExecuteCommand extends Tool<ExecuteCommandParams> {
     });
 
     const userConcens = await new Promise<string>((resolve) =>
-      rl.question("[ACTION] Comfirm? y / n [y]: ", resolve),
+      rl.question("[ACTION] Comfirm? ([y] / n): ", resolve),
     );
     if (
       !userConcens &&
       !(userConcens.startsWith("y") || userConcens.startsWith("Y"))
     ) {
-      console.log("[ACTION] The command execution is denied.");
+      console.log("[ACTION] The command execution has been denied.");
       return "User denied this command execution.";
     }
+    rl.close();
 
-    console.log(`[ACTION] Executing command: ${params.command}`);
     const { stdout, stderr, exitCode } = await executeCommand(params.command, {
       timeout: params.timeout ?? 300,
       currentDir: this.absoluteCwd,
     });
 
     return (
-      !!stderr
+      exitCode !== 0
         ? [
             "Command executed with Error:",
-            `Stdout:\n${stdout}`,
-            `Stderr:${stderr}`,
+            stderr,
+            stdout,
             `Exit code: ${exitCode}`,
           ]
-        : [`Stdout:\n${stdout}`, `Stderr:${stderr}`, `Exit code: ${exitCode}`]
+        : [stderr, stdout, `Exit code: ${exitCode}`]
     ).join("\n\n");
   }
 }
@@ -91,8 +91,9 @@ const executeCommand = (
       cwd: currentDir,
       env: {
         ...process.env,
-        DEBIAN_FRONTEND: "noninteractive",
+        //DEBIAN_FRONTEND: "noninteractive",
       },
+      stdio: ["inherit", "pipe", "pipe"],
     },
   );
 
@@ -100,14 +101,14 @@ const executeCommand = (
     // Handle stdout data
     const stdout: string[] = [];
     child.stdout.on("data", (data) => {
-      console.log(`stdout: ${data}`);
+      process.stdout.write(data.toString());
       stdout.push(data.toString());
     });
 
     // Handle stderr data
     const stderr: string[] = [];
     child.stderr.on("data", (data) => {
-      console.error(`stderr: ${data}`);
+      process.stderr.write("[ERROR]" + data.toString());
       stderr.push(data.toString());
     });
 
@@ -115,10 +116,9 @@ const executeCommand = (
     child.on("close", (code) => {
       resolve({
         stdout: stdout.join("\n"),
-        stderr: stderr.join("\n"),
+        stderr: stderr.map((e) => "Error: " + e).join("\n"),
         exitCode: code || 0,
       });
-      console.log(`child process exited with code ${code}`);
     });
     child.on("disconnect", () => reject("child process disconnected"));
     child.on("error", (err) => reject(err));

@@ -62,22 +62,27 @@ export async function generateResponse(
 
   // Call the provided tools and add their responses to the thread.
   if ("tool_calls" in response && !!response.tool_calls) {
-    const toolRuns = await Promise.all(
-      response.tool_calls.map((call) => {
-        const tool = options.tools?.find((t) => t.id === call.function.name);
-        if (!tool) {
-          console.log(
-            `[WARN] Unexpected tool call to function '${call.function.name}'.`,
-          );
-          return {
-            role: "tool",
-            content: `Tool '${call.function.name}' not found. Please check your configuration.`,
-            tool_call_id: call.id,
-          } satisfies ChatCompletionToolMessageParam;
-        }
-        return tool.run(call.id, JSON.parse(call.function.arguments));
-      }),
-    );
+    const toolRuns = [];
+
+    for (const call of response.tool_calls) {
+      const tool = options.tools?.find((t) => t.id === call.function.name);
+
+      if (!tool) {
+        console.log(
+          `[WARN] Unexpected tool call to function '${call.function.name}'.`,
+        );
+        toolRuns.push({
+          role: "tool",
+          content: `Tool '${call.function.name}' not found. Please check your configuration.`,
+          tool_call_id: call.id,
+        } satisfies ChatCompletionToolMessageParam);
+        continue;
+      }
+
+      toolRuns.push(
+        await tool.run(call.id, JSON.parse(call.function.arguments)),
+      );
+    }
 
     return await generateResponse([...thread, response, ...toolRuns], options);
   }
