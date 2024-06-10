@@ -2,8 +2,12 @@
   "name": "cotask",
   "module": "index.ts",
   "type": "module",
+  "version": "0.1.0-beta",
+  "contributors": [
+    "Maximilian P. <max@cotask.dev>"
+  ],
   "scripts": {
-    "dev": "bun --compile --watch ./index.ts",
+    "dev": "bun run --compile --watch ./index.ts",
     "cli": "bun index.ts",
     "build": "bun build ./index.ts --compile --outfile cotask-cli"
   },
@@ -17,6 +21,7 @@
     "typescript": "^5.0.0"
   },
   "dependencies": {
+    "commander": "^12.1.0",
     "dotenv": "^16.4.5",
     "fs-extra": "^11.2.0",
     "openai": "^4.49.1"

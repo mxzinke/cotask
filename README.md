@@ -28,21 +28,17 @@ Execute the following command to login into CoTask Cloud:
 cotask login --key <CoTask-Cloud-API-Key>
 ```
 
-Start it than up in the directory CoTask should work in, by executing the following command:
+To fire CoTask up you can use the following command which includes a string of the task description
 
 ```bash
-cotask start
+cotask run "<Here comes your task description, what CoTask should accomplish>"
 ```
 
-Or in case you just want to run it for one task, you can use the following comand:
-
-```bash
-cotask task "<Here comes your task description, what CoTask should accomplish>"
-```
+For example you can let him setup a new project, update a specific API endpoint of your existing app or let him implement a new SQL query for the script your are currently working on. The possibilities are endless. Let CoTask try to solve it all.
 
 > Note: CoTask will create a `.cotask` folder where it stores it states, secrets and files. Do NOT commit this folder!
 
-CoTask will create, update and remove files of code which you can see git changes. He will also do online research on documentation, pull information from URLs you provided and more. For security reasons it is required, that you accept every command executed by CoTask. This behavior can be disabled by adding `--unsecure-command` to the command.
+CoTask will create, update and remove files of code which you can see git changes. He will also do online research on documentation, pull information from URLs you provided and more. For security reasons it is required, that you approve every command executed by CoTask. This behavior can be disabled by adding `--unsafe-command` to the command.
 
 ## Open Source Version (Free)
 
